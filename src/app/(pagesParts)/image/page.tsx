@@ -3,13 +3,13 @@ import NextImage from 'next/image'
 const Image = () => {
   return (
     <div>
-       <NextImage 
-      src="/public/globe.svg"
+      <NextImage 
+      src="/next.svg" 
       alt="foto"
       width={100}
       height={100}
       loading='lazy'
-      className="w-50 h-50 object-cover"
+      className="w-100 h-100 mx-[35%] "
       />
     </div>
   )
