@@ -1,8 +1,9 @@
 
 import axios from 'axios';
 
-const UserDetail = async ({ params }: any) => { 
-  const user = await axios.get(`https://jsonplaceholder.typicode.com/users/${params.id}`);
+const UserDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+  const user = await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
 
   return (
     <div className="p-6">
