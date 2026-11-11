@@ -2,10 +2,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { IUser } from "@/Interface/User";
 
 
 const Page = () => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<IUser>();
   const { id } = useParams();
 
   useEffect(() => {
