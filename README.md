@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Rendering Demo: SSR vs CSR
 
-## Getting Started
+[![Live demo](https://img.shields.io/badge/live-next--js--task--first.vercel.app-4f46e5?logo=vercel)](https://next-js-task-first.vercel.app/)
 
-First, run the development server:
+> AZ: Eyni istifadəçi siyahısını server (SSR) və brauzer (CSR) tərəfində yükləyən kiçik Next.js təlim layihəsi.
+
+A small Next.js App Router project that loads the same list of users in two ways, so you can compare
+server-side rendering and client-side rendering side by side. It also has a page of `next/image` examples.
+
+![Screenshot of the SSR users page](docs/screenshot.png)
+
+## Features
+
+- **/home (SSR)**: an async Server Component fetches the users on every request; the HTML already contains them.
+- **/home/[id] (SSR)**: user details rendered on the server, with `generateMetadata` and a real 404 for unknown ids.
+- **/users (CSR)**: a Client Component fetches the users in `useEffect`, with skeleton cards, an error state and a retry button.
+- **/users/[id] (CSR)**: user details fetched in the browser.
+- **/image**: four `next/image` setups (static import with blur placeholder and `priority`, `fill` + `sizes`, remote image with `remotePatterns`, fixed-size SVG).
+- **/contact**: links to GitHub and a validated demo form (it says clearly that nothing is sent).
+- Responsive layout with a mobile menu, a custom 404 page, and SEO: titles, descriptions, canonical URLs, Open Graph image, favicon, `robots.txt` and `sitemap.xml`.
+
+## Tech stack
+
+Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/codelady-ship/next-js-task-first.git
+cd next-js-task-first
+npm install
+npm run dev        # http://localhost:3000 (redirects to /home)
+npm run build && npm start   # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+No environment variables are needed.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The site is deployed on Vercel from the `main` branch. Every push to `main` triggers a new production build (`next build`).
+`/` redirects to `/home` (see `next.config.ts`).
 
-## Learn More
+## What I learned
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The difference between Server and Client Components, and when each one fetches data.
+- Why SSR pages are better for SEO: the content is in the first HTML response.
+- How the Metadata API works (`metadata`, `generateMetadata`, `robots.ts`, `sitemap.ts`, `opengraph-image.tsx`).
+- That a client page cannot export `metadata`, so I keep a small server `page.tsx` and move the browser logic into a client component.
+- That a `loading.tsx` boundary makes `notFound()` return status 200, because the response has already started streaming.
+- How `next/image` handles sizes, lazy loading, placeholders and remote images.

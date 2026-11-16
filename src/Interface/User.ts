@@ -1,21 +1,22 @@
-// Interface for Address
 export interface Address {
   street: string;
+  suite?: string;
   city: string;
+  zipcode?: string;
 }
 
-// Interface for Company
-export  interface Company {
+export interface Company {
   name: string;
+  catchPhrase?: string;
 }
 
-// Interface for User
-export  interface IUser {
+export interface IUser {
   id: number;
   name: string;
   username: string;
   email: string;
   phone: string;
+  website?: string;
   address: Address;
   company: Company;
 }
