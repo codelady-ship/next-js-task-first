@@ -1,24 +1,40 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getUser } from "@/lib/users";
+import UserDetails from "@/Components/UserDetails";
+import RenderNote from "@/Components/RenderNote";
 
-import axios from 'axios';
+type Props = { params: Promise<{ id: string }> };
 
-const UserDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const user = await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
+  const user = await getUser(id);
+  if (!user) notFound();
+  return {
+    title: `${user.name} (SSR)`,
+    description: `Details for ${user.name}, rendered on the server with Next.js.`,
+    alternates: { canonical: `/home/${id}` },
+  };
+}
+
+const UserDetail = async ({ params }: Props) => {
+  const { id } = await params;
+  const user = await getUser(id);
+  if (!user) notFound();
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-semibold text-center mb-6">{user?.data?.username} Details</h1>
-      <div className="bg-white p-6 border rounded-lg shadow-md max-w-4xl mx-auto">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-800">Full Name:</h2>
-          <p className="text-lg text-gray-600">{user?.data?.name}</p>
-        </div>
-        <div>
-          <h2 className="text-xl font-semibold text-gray-800">Email:</h2>
-          <p className="text-lg text-gray-600">{user?.data?.email}</p>
-        </div>
-      </div>
-    </div>
+    <>
+      <Link href="/home" className="mb-4 inline-block text-sm font-medium text-indigo-700 hover:underline">← All users (SSR)</Link>
+      <h1 className="mb-6 text-3xl font-bold tracking-tight">{user.name}</h1>
+      <RenderNote mode="SSR">
+        <p>
+          The server fetched user #{user.id} before sending this page, and the page title and description were generated
+          from the same data with <code className="rounded bg-white px-1">generateMetadata</code>.
+        </p>
+      </RenderNote>
+      <UserDetails user={user} />
+    </>
   );
 };
 

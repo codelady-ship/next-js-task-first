@@ -1,31 +1,21 @@
-//client side-le data cekmek
-"use client"
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import Link  from 'next/link';
-import { IUser } from '@/Interface/User';
-const Users = () => {
-  const [users, setUsers] = useState([]);
-  
-  useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/users')
-      .then(({ data }) => {
-        setUsers(data);
-      })
-  }, []);
+import type { Metadata } from "next";
+import Link from "next/link";
+import UsersClient from "@/Components/UsersClient";
 
-  return (
-    <div className="p-4">
-      <h1 className="text-2xl font-semibold text-center mb-6">Users Page (csr-le)</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {users.map(({ id, username }:IUser) => (
-          <Link  href={`/products/${id}`} key={id} className="bg-white p-4 border rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold">{username}</h2>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
+export const metadata: Metadata = {
+  title: "Users rendered in the browser (CSR)",
+  description: "The same ten users fetched in the browser with useEffect, showing loading and error states.",
+  alternates: { canonical: "/users" },
+};
+
+const Users = () => (
+  <>
+    <h1 className="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Users — client-side rendering</h1>
+    <p className="mb-6 max-w-2xl text-slate-600">
+      The same list as the <Link href="/home" className="font-medium text-indigo-700 hover:underline">SSR page</Link>, loaded a different way.
+    </p>
+    <UsersClient />
+  </>
+);
 
 export default Users;
